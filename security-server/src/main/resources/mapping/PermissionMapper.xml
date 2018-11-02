@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dao.PermissionDao">
+
+    <resultMap id="BaseMapper" type="com.pojo.Permission">
+        <id column="id" property="id" />
+        <result column="permission_name" property="permissionName" />
+        <result column="role_id" property="roleId" />
+        <result column="update_time" property="updateTime" />
+        <result column="flag" property="flag" />
+    </resultMap>
+
+    <sql id="BaseSql">
+        SELECT
+            id,
+            permission_name,
+            role_id,
+            flag,
+            update_time
+        FROM
+            permission
+        WHERE
+            flag = 0
+    </sql>
+
+    <select id="findPermissionsByUsername" resultMap="BaseMapper" parameterType="string">
+        <include refid="BaseSql" />
+          AND role_id IN (
+            SELECT id FROM role WHERE flag = 0
+            AND user_id = ( SELECT id FROM `user` WHERE flag = 0 AND `lock` = 0 AND username = #{username})
+        )
+    </select>
+</mapper>

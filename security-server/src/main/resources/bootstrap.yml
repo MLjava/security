@@ -1,0 +1,46 @@
+# 服务开始注册到eureka中心里面
+eureka:
+  client:
+    service-url:
+      defaultZone: http://172.23.216.152:8761/eureka, http://172.23.216.153:8761/eureka, http://172.23.216.154:8761/eureka
+      healthcheck: true
+  instance:
+    lease-expiration-duration-in-seconds: 30
+    lease-renewal-interval-in-seconds: 10
+    # 这个必须使用true
+    prefer-ip-address: true
+spring:
+  application:
+    name: security
+  datasource:
+    name: mybatis
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/security?useSSL=false
+    username: root
+    password: malin
+    # 配置redis
+  redis:
+    host: 127.0.0.1
+    password: malin
+    port: 6379
+  security:
+    user:
+      name: user
+      password: admin
+  # 模板解析器
+  thymeleaf:
+    cache: false
+    prefix: classpath:/templates/
+    suffix: .html
+    mode: HTML
+    encoding: UTF-8
+server:
+  port: 7777
+# mybatis配置
+mybatis:
+  mapper-locations: classpath:/mapping/**/*Mapper.xml
+  type-aliases-package: com.pojo
+# 日志输出
+logging:
+  level:
+    com.dao: debug
