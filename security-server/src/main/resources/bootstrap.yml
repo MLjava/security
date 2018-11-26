@@ -23,10 +23,6 @@ spring:
     host: 127.0.0.1
     password: malin
     port: 6379
-  security:
-    user:
-      name: user
-      password: admin
   # 模板解析器
   thymeleaf:
     cache: false
