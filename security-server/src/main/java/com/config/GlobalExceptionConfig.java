@@ -2,6 +2,7 @@ package com.config;
 
 import com.enums.CommonEnum;
 import com.enums.ResultEnum;
+import com.exception.CaptchaException;
 import com.exception.CommonException;
 import com.exception.HomeinnsException;
 import com.utils.ResultUtils;

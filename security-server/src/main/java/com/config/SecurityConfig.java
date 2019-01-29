@@ -1,5 +1,8 @@
 package com.config;
 
+import com.google.code.kaptcha.impl.DefaultKaptcha;
+import com.google.code.kaptcha.util.Config;
+import com.security.LoginAuthenticationFilter;
 import com.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -11,6 +14,9 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import java.util.Properties;
 
 /**
  * @author：linma
@@ -19,7 +25,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
  **/
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled =true)
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
@@ -45,24 +51,41 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     /**
-     * 配置访问页面配置
+     * 添加验证码
      *
-     * @param http
-     * @throws Exception
+     * @return
      */
+    @Bean
+    public DefaultKaptcha captchaProducer() {
+        DefaultKaptcha captchaProducer = new DefaultKaptcha();
+        Properties properties = new Properties();
+        properties.setProperty("kaptcha.border", "yes");
+        properties.setProperty("kaptcha.border.color", "105,179,90");
+        properties.setProperty("kaptcha.textproducer.font.color", "red");
+        properties.setProperty("kaptcha.image.width", "125");
+        properties.setProperty("kaptcha.image.height", "45");
+        properties.setProperty("kaptcha.textproducer.font.size", "45");
+        properties.setProperty("kaptcha.session.key", "code");
+        properties.setProperty("kaptcha.textproducer.char.length", "4");
+        properties.setProperty("kaptcha.textproducer.font.names", "宋体,楷体,微软雅黑");
+        Config config = new Config(properties);
+        captchaProducer.setConfig(config);
+        return captchaProducer;
+    }
+
     @Override
     protected void configure(HttpSecurity http)
             throws Exception {
-        // 开始配置页面
         http
+                .addFilterBefore(new LoginAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
-                // 静态资源被忽略
-                .antMatchers("/css/**", "/fonts/**", "/images/**", "/js/**", "/lib/**").permitAll()
+                .antMatchers("/css/**", "/fonts/**", "/images/**", "/js/**", "/lib/**", "/homeinns/randcode")
+                .permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
                 .loginPage("/homeinns/login")
-                .defaultSuccessUrl("/homeinns/index")
+                .defaultSuccessUrl("/homeinns/index", true)
                 .and()
                 .logout()
                 .logoutSuccessUrl("/homeinns/login")
