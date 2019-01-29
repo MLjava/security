@@ -23,7 +23,7 @@ public enum CaptchaEnum {
      * 验证码不匹配
      */
     IDENTITY_CODE_CAN_NOT_MATE(CommonConstant.IDENTITY_CODE_MUST_NOT_NULL,
-            CommonConstant.Message.IDENTITY_CODE_MUST_NOT_NULL_MESSAGE);
+            CommonConstant.Message.IDENTITY_CODE_CAN_NOT_MATE_MESSAGE);
 
     private Integer code;
 
