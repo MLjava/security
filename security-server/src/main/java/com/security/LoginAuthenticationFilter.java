@@ -29,7 +29,7 @@ public class LoginAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
         // 判断url地址，是否需要去拦截
-        if (StringUtils.equals("/homeinns/login", request.getRequestURI())
+        if (StringUtils.equals("/login", request.getRequestURI())
                 && StringUtils.equalsIgnoreCase(request.getMethod(), "post")) {
             // 从表单获取用户输入的验证码
             String verification = request.getParameter("verification");

@@ -2,7 +2,10 @@ package com.config;
 
 import com.google.code.kaptcha.impl.DefaultKaptcha;
 import com.google.code.kaptcha.util.Config;
+import com.security.AjaxAuthFailHandler;
+import com.security.AjaxAuthSuccessHandler;
 import com.security.LoginAuthenticationFilter;
+import com.security.UnauthorizedEntryPoint;
 import com.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -77,17 +80,31 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http)
             throws Exception {
         http
+                // 自定义匿名操作
+                .exceptionHandling()
+                .authenticationEntryPoint(new UnauthorizedEntryPoint())
+                .and()
+                // 添加自定义拦截器，放在用户密码判断之前，实现验证码功能
                 .addFilterBefore(new LoginAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
+                // 不拦截的页面
                 .antMatchers("/css/**", "/fonts/**", "/images/**", "/js/**", "/lib/**", "/homeinns/randcode")
                 .permitAll()
                 .anyRequest().authenticated()
                 .and()
+                //表单登录
                 .formLogin()
                 .loginPage("/homeinns/login")
+                // 添加自定义成功
+                .successHandler(new AjaxAuthSuccessHandler())
+                // 添加自定义失败
+                .failureHandler(new AjaxAuthFailHandler())
                 .defaultSuccessUrl("/homeinns/index", true)
+                .loginProcessingUrl("/login")
                 .and()
                 .logout()
+                // 实现登出操作
+//                .logoutUrl("/homeinns/logout")
                 .logoutSuccessUrl("/homeinns/login")
                 .permitAll()
                 .and()

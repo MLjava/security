@@ -27,6 +27,11 @@ public interface CommonConstant {
      */
     Integer RESPONSE_ERROR = 500;
 
+    /**
+     * 未认证的请求
+     */
+    Integer SC_UNAUTHORIZED = 401;
+
     interface Message {
 
         String REQUEST_OK_MESSAGE = "请求成功!";
@@ -36,5 +41,7 @@ public interface CommonConstant {
         String IDENTITY_CODE_MUST_NOT_NULL_MESSAGE = "验证码不可以位空！";
 
         String IDENTITY_CODE_CAN_NOT_MATE_MESSAGE = "验证码不匹配！";
+
+        String SC_UNAUTHORIZED_MESSAGE = "没有登录的请求！";
     }
 }
